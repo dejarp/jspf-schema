@@ -1,0 +1,21 @@
+{
+  "name": "jspf-schema",
+  "version": "1.0.0",
+  "description": "JSON schema for JSON Shareable Playlist Format",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "JSON",
+    "JSPF"
+  ],
+  "author": "Paul Dejardin",
+  "license": "MIT",
+  "devDependencies": {
+    "ajv": "^6.0.0"
+  }
+}

@@ -1,0 +1,241 @@
+{
+    "title": "jspf schema",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "playlist": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "$comment": "A human-readable title for the playlist."
+                },
+                "creator": {
+                    "type": "string",
+                    "$comment": "Human-readable name of the entity (author, authors, group, company, etc) that authored the playlist."
+                },
+                "annotation": {
+                    "type": "string",
+                    "$comment": "A human-readable comment on the playlist. This is character data, not HTML, and it may not contain markup."
+                },
+                "info": {
+                    "type": "string",
+                    "format": "uri-reference",
+                    "$comment": "URL of a web page to find out more about this playlist. Likely to be homepage of the author, and would be used to find out more about the author and to find more playlists by the author."
+                },
+                "location": {
+                    "type": "string",
+                    "format": "uri-reference",
+                    "$comment": "Source URL for this playlist."
+                },
+                "identifier": {
+                    "type": "string",
+                    "$comment": "Canonical ID for this playlist. Likely to be a hash or other location-independent name. MUST be a legal URN."
+                },
+                "image": {
+                    "type": "string",
+                    "format": "uri-reference",
+                    "$comment": "URL of an image to display in the absence of a //playlist/trackList/image element."
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "$comment": "Creation date (not last-modified date) of the playlist, formatted as a rfc3339 date-time."
+                },
+                "license": {
+                    "type": "string",
+                    "format": "uri-reference",
+                    "$comment": "URL of a resource that describes the license under which this playlist was released."
+                },
+                "attribution": {
+                    "type": "array",
+                    "$comment": "An ordered list of URIs. The purpose is to satisfy licenses allowing modification but requiring attribution. If you modify such a playlist, move its location or identifier to an object and put that object at the top of the items in the attribution property. Such a list can grow without limit, so as a practical matter we suggest deleting ancestors more than ten generations back.",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "location": {
+                                        "type": "string",
+                                        "format": "uri-reference"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "properties": {
+                                    "identifier": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "link": {
+                    "type": "array",
+                    "$comment": "The link element allows non-JSPF web resources to be included in JSPF documents without breaking JSPF validation.",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "patternProperties": {
+                            ".*": {
+                                "type": "string",
+                                "format": "uri-reference",
+                                "$comment": "URL of a resource."
+                            }
+                        }
+                    }
+                },
+                "meta": {
+                    "type": "array",
+                    "$comment": "The meta element allows non-JSPF metadata to be included in JSPF documents without breaking JSPF validation.",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "patternProperties": {
+                            ".*": {
+                                "type": "string",
+                                "$comment": "Value of the metadata element. This is plain old text, and it may not contain markup."
+                            }
+                        }
+                    }
+                },
+                "extension": {
+                    "type": "object",
+                    "$comment": "The extension element allows non-JSPF JSON to be included in JSPF documents without breaking JSPF validation. The purpose is to allow nested JSON, which the meta and link elements do not.",
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        ".*": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                },
+                "track": {
+                    "type": "array",
+                    "$comment": "Ordered list of track objects to be rendered. The sequence is a hint, not a requirement; renderers are advised to play tracks from top to bottom unless there is an indication otherwise. If an track object cannot be rendered, a user-agent MUST skip to the next track object and MUST NOT interrupt the sequence. playlist objects MUST contain one and only one track property. The track array may be empty.",
+                    "minItems": 0,
+                    "uniqueItems": false,
+                    "items": {
+                        "type": "object",
+                        "$comment": "Track object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "location": {
+                                "type": "array",
+                                "minItems": 0,
+                                "uniqueItems": false,
+                                "$comment": "Array of possible locations for URL resource to be rendered. Probably an audio resource, but MAY be any type of resource with a well-known duration, such as video, a SMIL document, or a JSPF document. The duration of the resource defined in this element defines the duration of rendering. Track MAY contain zero or more locations, but a user-agent MUST NOT render more than one of the named resources.",
+                                "items": {
+                                    "type": "string",
+                                    "format": "uri-reference",
+                                    "$comment": "A possible URL location for the track"
+                                }
+                            },
+                            "identifier": {
+                                "type": "array",
+                                "minItems": 0,
+                                "uniqueItems": false,
+                                "$comment": "An array of canonical ID's for this resource. Likely to be a hash or other location-independent name, such as a MusicBrainz identifier or isbn URN (if there existed isbn numbers for audio). MUST be a legal URN. A track may have more than one canonical ID. Resolvers should determine which one to use.",
+                                "items": {
+                                    "type": "string",
+                                    "$comment": "A canonical ID for the track."
+                                }
+                            },
+                            "title": {
+                                "type": "string",
+                                "$comment": "Human-readable name of the track that authored the resource which defines the duration of track rendering. This value is primarily for fuzzy lookups, though a user-agent may display it."
+                            },
+                            "creator": {
+                                "type": "string",
+                                "$comment": "Human-readable name of the entity (author, authors, group, company, etc) that authored the resource which defines the duration of track rendering. This value is primarily for fuzzy lookups, though a user-agent may display it."
+                            },
+                            "annotation": {
+                                "type": "string",
+                                "$comment": "A human-readable comment on the track. This is character data, not HTML, and it may not contain markup."
+                            },
+                            "info": {
+                                "type": "string",
+                                "format": "uri-reference",
+                                "$comment": "URL of a place where this resource can be bought or more info can be found."
+                            },
+                            "image": {
+                                "type": "string",
+                                "format": "uri-reference",
+                                "$comment": "URL of an image to display for the duration of the track."
+                            },
+                            "album": {
+                                "type": "string",
+                                "$comment": "Human-readable name of the collection from which the resource which defines the duration of track rendering comes. For a song originally published as a part of a CD or LP, this would be the title of the original release. This value is primarily for fuzzy lookups, though a user-agent may display it."
+                            },
+                            "trackNum": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "$comment": "Integer with value greater than zero giving the ordinal position of the media on the xspf:album. This value is primarily for fuzzy lookups, though a user-agent may display it."
+                            },
+                            "duration": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "$comment": "The time to render a resource, in milliseconds. It MUST be a nonnegative integer. This value is only a hint -- different JSPF generators will generate slightly different values. A user-agent MUST NOT use this value to determine the rendering duration, since the data will likely be low quality."
+                            },
+                            "link": {
+                                "type": "array",
+                                "minItems": 0,
+                                "uniqueItems": false,
+                                "$comment": "The link element allows non-JSPF web resources to be included in track objects without breaking JSPF validation.",
+                                "items": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "patternProperties": {
+                                        ".*": {
+                                            "type": "string",
+                                            "format": "uri-reference",
+                                            "$comment": "URL of a resource."
+                                        }
+                                    }
+                                }
+                            },
+                            "meta": {
+                                "type": "array",
+                                "minItems": 0,
+                                "uniqueItems": false,
+                                "$comment": "The meta element allows non-JSPF metadata to be included in track objects without breaking JSPF validation.",
+                                "items": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "patternProperties": {
+                                        ".*": {
+                                            "type": "string",
+                                            "$comment": "Value of the metadata element. This is character data, not HTML, and it may not contain markup."
+                                        }
+                                    }
+                                }
+                            },
+                            "extension": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "$comment": "The extension element allows non-JSPF JSON to be included in JSPF documents without breaking JSPF validation. The purpose is to allow nested JSON, which the meta and link elements do not.",
+                                "patternProperties": {
+                                    ".*": {
+                                        "type": "array",
+                                        "minItems": 0,
+                                        "uniqueItems": false,
+                                        "$comment": "Array of arbitrary JSON blobs representing extensions to the JSPF document.",
+                                        "items": {
+                                            "$comment": "The only limitation on extension bodies are that they are valid JSON."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
